@@ -42,6 +42,7 @@ pipeline {
                 script {
                     sh '''
                     docker-compose up -d
+                    sleep 20
                     status_code = $(curl -o /dev/null -s -w "%{http_code}" http://localhost:8090/api/v1/movies/docs)
                     echo $status_code
                     docker-compose down 
