@@ -131,8 +131,10 @@ pipeline {
 
     post {
         always {
-            script {
-                sh 'docker-compose down'
+            steps {
+                script {
+                    sh 'docker-compose down'
+                }
             }
         }
         success {
