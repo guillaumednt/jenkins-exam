@@ -33,4 +33,4 @@ spec:
         - name: DATABASE_URI
           value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@movie-service-db-service/movie_db
         - name: CAST_SERVICE_HOST_URL
-          values: http://cast-service-fastapi-service:8000/api/v1/casts/
+          value: http://cast-service-fastapi-service:8000/api/v1/casts/
