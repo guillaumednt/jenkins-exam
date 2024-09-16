@@ -53,7 +53,8 @@ pipeline {
                     if [ $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:$NODE_PORT/api/v1/movies) -ne 200 OR $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:$NODE_PORT/api/v1/casts) -ne 200 ]
                     then 
                         error "Microservice issue"
-
+                    fi 
+                    
                     status=${curl http://localhost:$NODE_PORT/api/v1/movies}
                     curl http://localhost:$NODE_PORT/api/v1/casts
                     helm uninstall nginx --namespace test
