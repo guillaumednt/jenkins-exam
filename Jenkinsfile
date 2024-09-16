@@ -40,7 +40,7 @@ pipeline {
                 script {
                     sh '''
                     docker-compose up -d
-                    sleep 20
+                    sleep 5
                     curl -o /dev/null -s -w "%{http_code}" http://localhost:8090/api/v1/movies/docs/
                     docker-compose down 
                     '''
