@@ -161,7 +161,7 @@ pipeline {
 
 
 
-if [ $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:30549/api/v1/movies) -ne 200 ]
-                    then 
-                        echo "Microservice issue"
-                    fi 
+// if [ $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:30549/api/v1/movies) -ne 200 ]
+//                     then 
+//                         echo "Microservice issue"
+//                     fi 
