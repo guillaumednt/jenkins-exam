@@ -1,0 +1,8 @@
+apiVersion: v2
+name: postgres
+description: Chart helm pour deployer postgresql
+version: 0.1.0
+appVersion: "1.0"
+maintainers:
+  - name: Guillaume Danet
+    email: guillaume.danet@live.fr

@@ -1,0 +1,28 @@
+replicaCount: 1
+
+image:
+  name: postgres
+  tag: 12.1-alpine
+
+postgresql:
+  replicas: 1
+  port: 5432
+
+pv:
+  accessModes: ReadWriteOnce
+  storageClassName: local-path
+  enabled: true
+  size: 10Gi
+  storageClass: "default"
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+service:
+  type: ClusterIP
+  port: 5432

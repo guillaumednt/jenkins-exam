@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.postgresql.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        env:
+        - name: POSTGRES_DB
+          value: "movie_db"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: POSTGRES_PASSWORD
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: {{ .Release.Name }}-persistent-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: {{ .Release.Name }}-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-pvc
