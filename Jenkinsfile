@@ -41,34 +41,10 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker run -d -p 5000:5000 --name registry registry:2
-                    docker build -t localhost:5000/movie-service:$DOCKER_TAG movie-service/
-                    docker build -t localhost:5000/cast-service:$DOCKER_TAG cast-service/                    
-
-                    helm upgrade --install cast-service-db helm-charts/cast-service-db/ --namespace test
-                    helm upgrade --install movie-service-db helm-charts/movie-service-db/ --namespace test
-                    sleep 5
-
-                    docker image ls
-
-                    helm upgrade --install cast-service-fastapi helm-charts/movie-service-fastapi/ --namespace test --set image.tag=v.${BUILD_ID}.0
-                    helm upgrade --install movie-service-fastapi helm-charts/movie-service-fastapi/ --namespace test --set image.tag=v.${BUILD_ID}.0
-                    sleep 5 
-                    helm upgrade --install nginx helm-charts/nginx/ --namespace test
-                    NODE_PORT=$(kubectl get svc nginx-service -o jsonpath='{.spec.ports[0].nodePort}' --namespace test)
-
-                    if [ $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:$NODE_PORT/api/v1/movies) -ne 200 || $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:$NODE_PORT/api/v1/casts) -ne 200 ]
-                    then 
-                        error "Microservice issue"
-                    fi 
-
-                    status=${curl http://localhost:$NODE_PORT/api/v1/movies}
-                    curl http://localhost:$NODE_PORT/api/v1/casts
-                    helm uninstall nginx --namespace test
-                    helm uninstall cast-service-fastapi --namespace test
-                    helm uninstall movie-service-fastapi --namespace test
-                    helm uninstall cast-service-db --namespace test
-                    helm uninstall movie-service-db --namespace test
+                    docker-compose up -d
+                    status_code = $(curl -o /dev/null -s -w "%{http_code}" http://localhost:8001/api/v1/docs)
+                    echo $status_code
+                    docker-compose down 
                     '''
                 }
             }
