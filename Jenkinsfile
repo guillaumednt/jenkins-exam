@@ -47,7 +47,7 @@ pipeline {
                     helm upgrade --install cast-service-fastapi helm-charts/movie-service-fastapi/ --namespace test --set image.tag=v.${BUILD_ID}.0
                     helm upgrade --install movie-service-fastapi helm-charts/movie-service-fastapi/ --namespace test --set image.tag=v.${BUILD_ID}.0
                     sleep 5 
-                    helm upgrade --install nginx nginx/ --namespace test
+                    helm upgrade --install nginx helm-charts/nginx/ --namespace test
 
                     curl http://
 
