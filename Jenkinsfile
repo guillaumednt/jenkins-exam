@@ -18,7 +18,6 @@ pipeline {
                         script {
                             sh '''
                             docker build -t $DOCKER_ID/movie-service:$DOCKER_TAG movie-service/
-                            sleep 6
                             '''
                         }
                     }
@@ -29,7 +28,6 @@ pipeline {
                         script {
                             sh '''
                             docker build -t $DOCKER_ID/cast-service:$DOCKER_TAG cast-service/
-                            sleep 6
                             '''
                         }
                     }
@@ -43,8 +41,7 @@ pipeline {
                     sh '''
                     docker-compose up -d
                     sleep 20
-                    status_code = $(curl -o /dev/null -s -w "%{http_code}" http://localhost:8090/api/v1/movies/docs)
-                    echo $status_code
+                    curl -o /dev/null -s -w "%{http_code}" http://localhost:8090/api/v1/movies/docs/
                     docker-compose down 
                     '''
                 }
