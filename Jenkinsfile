@@ -41,6 +41,7 @@ pipeline {
                     sh '''
                     docker-compose up -d
                     '''
+                    sleep 20
                 }
                 script {
                     def url = 'http://localhost:8090/api/v1/movies/'
