@@ -13,12 +13,24 @@ spec:
         app: {{ .Release.Name }}
     spec:
       containers:
-      - name: fastapi
+      - name: {{ .Release.Name }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        command: ["uvicorn"]
+        args: ["app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
         ports:
-        - containerPort: 5000
-        resources:
-            requests:
-              cpu: "50m"
-            limits:
-              cpu: "100m"
+        - containerPort: 8000
+        env:
+        - name: POSTGRES_USER
+          valueFrom: 
+            secretKeyRef:
+              name: movie-service-db-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: movie-service-db-secret
+              key: POSTGRES_PASSWORD      
+        - name: DATABASE_URI
+          value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@movie-service-db-service/movie_db
+        - name: CAST_SERVICE_HOST_URL
+          values: http://cast-service-fastapi-service:8000/api/v1/casts/

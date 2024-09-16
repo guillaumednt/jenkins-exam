@@ -1,15 +1,9 @@
 replicaCount: 1
 image:
   repository: guillaumednt/cast-service
-  tag: ""
+  tag: "latest"
+
 
 service:
   type: ClusterIP
   port: 80
-
-ingress: 
-  annotations: 
-    clusterissuer: "letsencrypt-prod"
-  ingressClassName: traefik
-  host: cast-service.datascientest-dan.dns-dynamic.net
-  
