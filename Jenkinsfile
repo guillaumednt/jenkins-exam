@@ -17,7 +17,7 @@ pipeline {
                     steps {
                         script {
                             sh '''
-                            docker build -t $DOCKER_ID/movie-service:$DOCKER_TAG movie-server/
+                            docker build -t $DOCKER_ID/movie-service:$DOCKER_TAG movie-service/
                             sleep 6
                             '''
                         }
