@@ -41,7 +41,7 @@ pipeline {
                     sh '''
                     docker-compose up -d
                     sleep 5
-                    curl -o /dev/null -s -w "%{http_code}" http://localhost:8090/api/v1/movies/docs/
+                    curl -o /dev/null -s -w "%{http_code}" http://localhost:8090/api/v1/movies/
                     docker-compose down 
                     '''
                 }
