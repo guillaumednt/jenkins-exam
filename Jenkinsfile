@@ -41,7 +41,6 @@ pipeline {
                     sh '''
                     docker-compose up -d
                     '''
-
                 }
                 script {
                     def url = 'http://localhost:8090/api/v1/movies/'
@@ -52,6 +51,7 @@ pipeline {
                     } else {
                         echo "HTTP status code is 200. Test passed."
                     }
+                }
                 script {
                     sh '''
                     docker-compose down 
