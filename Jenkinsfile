@@ -41,6 +41,10 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    docker run -d -p 5000:5000 --name registry registry:2
+                    docker build -t localhost:5000/movie-service:$DOCKER_TAG movie-service/
+                    docker build -t localhost:5000/cast-service:$DOCKER_TAG cast-service/                    
+
                     helm upgrade --install cast-service-db helm-charts/cast-service-db/ --namespace test
                     helm upgrade --install movie-service-db helm-charts/movie-service-db/ --namespace test
                     sleep 5
