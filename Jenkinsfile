@@ -42,22 +42,21 @@ pipeline {
                     docker-compose up -d
                     '''
                     sleep 20
-                }
-                script {
                     def url = 'http://localhost:8090/api/v1/movies/'
                     def statusCode = sh(script: "curl -o /dev/null -s -w '%{http_code}' ${url}", returnStdout: true).trim()
 
                     if (statusCode != '200') {
+                        sh '''
+                        docker-compose down 
+                        '''
                         error "HTTP status code is ${statusCode}. Expected 200."
                     } else {
+                        sh '''
+                        docker-compose down 
+                        '''
                         echo "HTTP status code is 200. Test passed."
                     }
-                }
-                script {
-                    sh '''
-                    docker-compose down 
-                    '''
-                }
+                }    
             }
         }
 
@@ -131,13 +130,6 @@ pipeline {
     }
 
     post {
-        always {
-            steps {
-                script {
-                    sh 'docker-compose down'
-                }
-            }
-        }
         success {
             echo "Pipeline terminé avec succès."
         }
