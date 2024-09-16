@@ -146,19 +146,7 @@ pipeline {
     }
 }
 
-// // Fonction pour déployer les bases de données
-// def deployDatabase(dbName, env) {
-//     sh """
-//         helm upgrade --install ${dbName} helm-charts/${dbName} \\
-//             --namespace=${env} --kubeconfig=${KUBECONFIG_CREDENTIALS}
-//     """
-// }
 
 
 
 
-
-// if [ $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:30549/api/v1/movies) -ne 200 ]
-//                     then 
-//                         echo "Microservice issue"
-//                     fi 
