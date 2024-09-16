@@ -49,8 +49,13 @@ pipeline {
                     sleep 5 
                     helm upgrade --install nginx helm-charts/nginx/ --namespace test
                     NODE_PORT=$(kubectl get svc nginx-service -o jsonpath='{.spec.ports[0].nodePort}')
-                    curl http://localhost:$NODEPORT/api/v1/movies
-                    curl http://localhost:$NODEPORT/api/v1/casts
+
+                    if [ $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:$NODE_PORT/api/v1/movies) -ne 200 OR $(curl -s -o /dev/null -I -w "%{http_code}" http://localhost:$NODE_PORT/api/v1/casts) -ne 200 ]
+                    then 
+                        error "Microservice issue
+
+                    status=${curl http://localhost:$NODE_PORT/api/v1/movies}
+                    curl http://localhost:$NODE_PORT/api/v1/casts
                     helm uninstall nginx
                     helm uninstall cast-service-fastapi
                     helm uninstall movie-service-fastapi
