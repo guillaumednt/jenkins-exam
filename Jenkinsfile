@@ -48,9 +48,14 @@ pipeline {
                     helm upgrade --install movie-service-fastapi helm-charts/movie-service-fastapi/ --namespace test --set image.tag=v.${BUILD_ID}.0
                     sleep 5 
                     helm upgrade --install nginx helm-charts/nginx/ --namespace test
-
-                    curl http://
-
+                    NODE_PORT=$(kubectl get svc nginx-service -o jsonpath='{.spec.ports[0].nodePort}')
+                    curl http://localhost:$NODEPORT/api/v1/movies
+                    curl http://localhost:$NODEPORT/api/v1/casts
+                    helm uninstall nginx
+                    helm uninstall cast-service-fastapi
+                    helm uninstall movie-service-fastapi
+                    helm uninstall cast-service-db
+                    helm uninstall movie-service-db
                     '''
                 }
             }
