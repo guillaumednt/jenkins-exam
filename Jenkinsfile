@@ -72,31 +72,64 @@ pipeline {
             }
         }
 
-        // stage('Deploy Databases dev') {
-        //     {
-        //         parallel {
-        //             stage('Deploy Cast Database') {
-        //                 steps {
-        //                     script {
-        //                         sh '''
-        //                         docker build -t $DOCKER_ID/movie-service:$DOCKER_TAG movie-service/
-        //                         '''
-        //                     }
-        //                 }
-        //             }
+        stage('Deploy Databases dev') {
+            parallel {
+                stage('Deploy Cast Database') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install cast-service-db helm-chart/cast-service-db/ --namespace dev
+                            '''
+                        }
+                    }
+                }
 
-        //             stage('Build Cast Service') {
-        //                 steps {
-        //                     script {
-        //                         sh '''
-        //                         docker build -t $DOCKER_ID/cast-service:$DOCKER_TAG cast-service/
-        //                         '''
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+                stage('Build Cast Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install cast-service-db helm-chart/movie-service-db/ --namespace dev
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Microservices dev') {
+            parallel {
+                stage('Deploy Cast Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install cast-service-fastapi helm-chart/cast-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace dev
+                            '''
+                        }
+                    }
+                }
+
+                stage('Build Cast Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install movie-service-fastapi helm-chart/movie-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace dev
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy nginx dev') {
+            step {
+                sh '''
+                helm upgrade --install nginx helm-charts/nginx/ --namespace dev
+                '''
+            }
+        }
+    }
+
+
 
 
 
