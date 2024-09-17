@@ -11,7 +11,7 @@ pipeline {
     
     stages {
         stage('Build Docker Images') {
-            
+
             parallel {
                 stage('Build Movie Service') {
                     steps {
@@ -249,6 +249,7 @@ pipeline {
                         input message: 'Do you want to deploy in production ?', ok: 'Yes'
                     }
                     if ($BRANCH_NAME != "master") {
+                        echo "$BRANCH_NAME"
                         error "No deployment in prod as branch is not master"
                     }
                 }
