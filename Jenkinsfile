@@ -245,11 +245,11 @@ pipeline {
         {
             steps {
                 script {
+                    echo "La branche est : $BRANCH_NAME le var env est : $env.BRANCH_NAME"
                     timeout(time: 15, unit: "MINUTES") {
                         input message: 'Do you want to deploy in production ?', ok: 'Yes'
                     }
                     if ($BRANCH_NAME != "master") {
-                        echo "$BRANCH_NAME"
                         error "No deployment in prod as branch is not master"
                     }
                 }
