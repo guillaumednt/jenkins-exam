@@ -60,16 +60,46 @@ pipeline {
             }
         }
 
-        // stage('Push Docker Images') {
-        //     steps {
-        //         script {
-        //             docker.withRegistry("https://index.docker.io/v1/", DOCKERHUB_CREDENTIALS) {
-        //                 sh "docker push ${DOCKERHUB_USERNAME}/movie-service:${IMAGE_TAG}"
-        //                 sh "docker push ${DOCKERHUB_USERNAME}/cast-service:${IMAGE_TAG}"
+        stage('Push Docker Images') {
+            steps {
+                script {
+                    sh '''
+                    pwd
+                    docker login -u $DOCKER_ID -p $DOCKERHUB_PASS
+                    docker push $DOCKER_ID/cast-service:$DOCKER_TAG
+                    docker push $DOCKER_ID/movie-service:$DOCKER_TAG
+                    '''
+                }
+            }
+        }
+
+        // stage('Deploy Databases dev') {
+        //     {
+        //         parallel {
+        //             stage('Deploy Cast Database') {
+        //                 steps {
+        //                     script {
+        //                         sh '''
+        //                         docker build -t $DOCKER_ID/movie-service:$DOCKER_TAG movie-service/
+        //                         '''
+        //                     }
+        //                 }
+        //             }
+
+        //             stage('Build Cast Service') {
+        //                 steps {
+        //                     script {
+        //                         sh '''
+        //                         docker build -t $DOCKER_ID/cast-service:$DOCKER_TAG cast-service/
+        //                         '''
+        //                     }
+        //                 }
         //             }
         //         }
         //     }
         // }
+
+
 
         // stage('Deploy Movie Database') {
         //     steps {
