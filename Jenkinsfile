@@ -242,12 +242,14 @@ pipeline {
 
         stage('Check prod deployment')
         {
-            script {
-                timeout(time: 15, unit: "MINUTES") {
-                    input message: 'Do you want to deploy in production ?', ok: 'Yes'
-                }
-                if ($BRANCH_NAME != "master") {
-                    error "No deployment in prod as branch is not master"
+            steps {
+                script {
+                    timeout(time: 15, unit: "MINUTES") {
+                        input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                    }
+                    if ($BRANCH_NAME != "master") {
+                        error "No deployment in prod as branch is not master"
+                    }
                 }
             }
         }
