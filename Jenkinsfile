@@ -84,7 +84,7 @@ pipeline {
                     }
                 }
 
-                stage('Build Cast Service') {
+                stage('Deploy Movie Database') {
                     steps {
                         script {
                             sh '''
@@ -108,7 +108,7 @@ pipeline {
                     }
                 }
 
-                stage('Build Cast Service') {
+                stage('Deploy Movie Service') {
                     steps {
                         script {
                             sh '''
@@ -127,6 +127,188 @@ pipeline {
                 '''
             }
         }
+
+        stage('Deploy Databases qa') {
+            parallel {
+                stage('Deploy Cast Database') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install cast-service-db helm-charts/cast-service-db/ --namespace qa
+                            '''
+                        }
+                    }
+                }
+
+                stage('Deploy Movie Database') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install movie-service-db helm-charts/movie-service-db/ --namespace qa
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Microservices qa') {
+            parallel {
+                stage('Deploy Cast Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install cast-service-fastapi helm-charts/cast-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace qa
+                            '''
+                        }
+                    }
+                }
+
+                stage('Deploy Movie Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install movie-service-fastapi helm-charts/movie-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace qa
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy nginx qa') {
+            steps {
+                sh '''
+                helm upgrade --install nginx helm-charts/nginx/ --namespace qa
+                '''
+            }
+        }
+
+        stage('Deploy Databases staging') {
+            parallel {
+                stage('Deploy Cast Database') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install cast-service-db helm-charts/cast-service-db/ --namespace staging
+                            '''
+                        }
+                    }
+                }
+
+                stage('Deploy Movie Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install movie-service-db helm-charts/movie-service-db/ --namespace staging
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Microservices staging') {
+            parallel {
+                stage('Deploy Cast Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install cast-service-fastapi helm-charts/cast-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace staging
+                            '''
+                        }
+                    }
+                }
+
+                stage('Deploy Movie Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install movie-service-fastapi helm-charts/movie-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace staging
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy nginx staging') {
+            steps {
+                sh '''
+                helm upgrade --install nginx helm-charts/nginx/ --namespace staging
+                '''
+            }
+        }
+
+        stage('Check prod deployment')
+        {
+            script {
+                timeout(time: 15, unit: "MINUTES") {
+                    input message: 'Do you want to deploy in production ?', ok: 'Yes'
+                }
+                if ($BRANCH_NAME != "master") {
+                    error "No deployment in prod as branch is not master"
+                }
+            }
+        }
+
+        stage('Deploy Databases prod') {
+            parallel {
+                stage('Deploy Cast Database') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install cast-service-db helm-charts/cast-service-db/ --namespace prod
+                            '''
+                        }
+                    }
+                }
+
+                stage('Deploy Movie Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install movie-service-db helm-charts/movie-service-db/ --namespace prod
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Microservices prod') {
+            parallel {
+                stage('Deploy Cast Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install cast-service-fastapi helm-charts/cast-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace prod
+                            '''
+                        }
+                    }
+                }
+
+                stage('Deploy Movie Service') {
+                    steps {
+                        script {
+                            sh '''
+                            helm upgrade --install movie-service-fastapi helm-charts/movie-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace prod
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy nginx prod') {
+            steps {
+                sh '''
+                helm upgrade --install nginx helm-charts/nginx/ --namespace prod
+                '''
+            }
+        }
+
+
     }
 
 
