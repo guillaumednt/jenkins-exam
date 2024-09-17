@@ -78,7 +78,7 @@ pipeline {
                     steps {
                         script {
                             sh '''
-                            helm upgrade --install cast-service-db helm-chart/cast-service-db/ --namespace dev
+                            helm upgrade --install cast-service-db helm-charts/cast-service-db/ --namespace dev
                             '''
                         }
                     }
@@ -88,7 +88,7 @@ pipeline {
                     steps {
                         script {
                             sh '''
-                            helm upgrade --install cast-service-db helm-chart/movie-service-db/ --namespace dev
+                            helm upgrade --install cast-service-db helm-charts/movie-service-db/ --namespace dev
                             '''
                         }
                     }
@@ -102,7 +102,7 @@ pipeline {
                     steps {
                         script {
                             sh '''
-                            helm upgrade --install cast-service-fastapi helm-chart/cast-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace dev
+                            helm upgrade --install cast-service-fastapi helm-charts/cast-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace dev
                             '''
                         }
                     }
@@ -112,7 +112,7 @@ pipeline {
                     steps {
                         script {
                             sh '''
-                            helm upgrade --install movie-service-fastapi helm-chart/movie-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace dev
+                            helm upgrade --install movie-service-fastapi helm-charts/movie-service-fastapi/ --set image.tag=$DOCKER_TAG --namespace dev
                             '''
                         }
                     }
