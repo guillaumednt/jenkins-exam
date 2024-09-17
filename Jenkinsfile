@@ -245,11 +245,11 @@ pipeline {
         {
             steps {
                 script {
-                    echo "La branche est : ${BRANCH_NAME} le var env est : ${env.BRANCH_NAME}"
+                    echo "La branche est : ${GIT_BRANCH} le var env est : ${env.GIT_BRANCH}"
                     timeout(time: 15, unit: "MINUTES") {
                         input message: 'Do you want to deploy in production ?', ok: 'Yes'
                     }
-                    if ($BRANCH_NAME != "master") {
+                    if ( env.GIT_BRANCH != "master") {
                         error "No deployment in prod as branch is not master"
                     }
                 }
@@ -315,66 +315,6 @@ pipeline {
 
     }
 
-
-
-
-
-        // stage('Deploy Movie Database') {
-        //     steps {
-        //         script {
-        //             deployDatabase('movie-db', params.DEPLOY_ENV)
-        //         }
-        //     }
-        // }
-
-        // stage('Deploy Cast Database') {
-        //     steps {
-        //         script {
-        //             deployDatabase('cast-db', params.DEPLOY_ENV)
-        //         }
-        //     }
-        // }
-
-        // stage('Deploy Nginx') {
-        //     steps {
-        //         script {
-        //             deployNginx(params.DEPLOY_ENV)
-        //         }
-        //     }
-        // }
-
-        // stage('Deploy Movie Service to Kubernetes') {
-        //     steps {
-        //         script {
-        //             deployMovieService(params.DEPLOY_ENV)
-        //         }
-        //     }
-        // }
-
-        // stage('Deploy Cast Service to Kubernetes') {
-        //     steps {
-        //         script {
-        //             deployCastService(params.DEPLOY_ENV)
-        //         }
-        //     }
-        // }
-
-        // stage('Manual Approval for Production Deployment') {
-        //     when {
-        //         branch 'master'
-        //         expression { return params.DEPLOY_ENV == 'prod' }
-        //     }
-        //     steps {
-        //         input message: 'Approve Production Deployment?', ok: 'Deploy'
-        //         script {
-        //             deployMovieService('prod')
-        //             deployCastService('prod')
-        //             deployDatabase('movie-db', 'prod')
-        //             deployDatabase('cast-db', 'prod')
-        //             deployNginx('prod')
-        //         }
-        //     }
-        // }
     post {
         success {
             echo "Pipeline terminé avec succès."
