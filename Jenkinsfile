@@ -249,7 +249,7 @@ pipeline {
                     timeout(time: 15, unit: "MINUTES") {
                         input message: 'Do you want to deploy in production ?', ok: 'Yes'
                     }
-                    if ( env.GIT_BRANCH != "master") {
+                    if (!env.GIT_BRANCH.contains('master')) {
                         error "No deployment in prod as branch is not master"
                     }
                 }
