@@ -41,7 +41,7 @@ pipeline {
                     sh '''
                     docker-compose up -d
                     '''
-                    sleep 20
+                    sleep 5
                     def url = 'http://localhost:8090/api/v1/movies/'
                     def statusCode = sh(script: "curl -o /dev/null -s -w '%{http_code}' ${url}", returnStdout: true).trim()
 
@@ -245,7 +245,7 @@ pipeline {
         {
             steps {
                 script {
-                    echo "La branche est : $BRANCH_NAME le var env est : $env.BRANCH_NAME"
+                    echo "La branche est : ${BRANCH_NAME} le var env est : ${env.BRANCH_NAME}"
                     timeout(time: 15, unit: "MINUTES") {
                         input message: 'Do you want to deploy in production ?', ok: 'Yes'
                     }
