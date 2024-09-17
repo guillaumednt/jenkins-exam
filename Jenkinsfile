@@ -88,7 +88,7 @@ pipeline {
                     steps {
                         script {
                             sh '''
-                            helm upgrade --install cast-service-db helm-charts/movie-service-db/ --namespace dev
+                            helm upgrade --install movie-service-db helm-charts/movie-service-db/ --namespace dev
                             '''
                         }
                     }
