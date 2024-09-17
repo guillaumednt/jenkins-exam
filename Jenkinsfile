@@ -121,7 +121,7 @@ pipeline {
         }
 
         stage('Deploy nginx dev') {
-            step {
+            steps {
                 sh '''
                 helm upgrade --install nginx helm-charts/nginx/ --namespace dev
                 '''
